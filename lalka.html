@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8" />
+  <title>Alan - Fotograf</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+      margin: 0;
+      padding: 0;
+      transition: background 0.3s, color 0.3s;
+    }
+    header, footer {
+      background: #0a3d62;
+      color: white;
+      text-align: center;
+      padding: 1em;
+    }
+    nav a {
+      margin: 0 15px;
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    nav a.active {
+      text-decoration: underline;
+    }
+    section {
+      padding: 2em;
+      background: white;
+      margin: 20px;
+      border-radius: 10px;
+      transition: background 0.3s, color 0.3s;
+    }
+    img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 8px;
+    }
+    .media {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: center;
+    }
+    .media a {
+      flex: 1 1 250px;
+      max-width: 300px;
+    }
+    .media img:hover {
+      transform: scale(1.05);
+      transition: transform 0.3s ease;
+    }
+    .toggle-button {
+      position: fixed;
+      top: 15px;
+      right: 15px;
+      padding: 8px 12px;
+      background: #0a3d62;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .dark-mode {
+      background: #1e1e1e;
+      color: #ccc;
+    }
+    .dark-mode section {
+      background: #2c2c2c;
+    }
+    #scrollTop {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      padding: 10px 15px;
+      font-size: 16px;
+      background: #0a3d62;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .flake {
+      position: fixed;
+      top: -5%;
+      color: white;
+      pointer-events: none;
+      animation-name: fall;
+      animation-timing-function: linear;
+      animation-iteration-count: infinite;
+    }
+    @keyframes fall {
+      to {
+        transform: translateY(120vh);
+      }
+    }
+  </style>
+</head>
+<body>
+  <button class="toggle-button" onclick="toggleDarkMode()">🌙 Tryb</button>
+
+  <header>
+    <h1>Alan - Fotograf</h1>
+    <nav>
+      <a href="#biografia">Biografia</a>
+      <a href="#media">Media</a>
+      <a href="#kontakt">Kontakt</a>
+    </nav>
+  </header>
+
+  <section id="biografia">
+    <h2>Biografia</h2>
+    <p>Robię zdjęcia od 6 lat. Jestem polskim fotografem, który pracuje na sprzęcie <strong>Pentax</strong>. 
+    Specjalizuję się w portretach w przyrodzie oraz fotografii krajobrazowej. Moim celem jest uchwycenie 
+    naturalnego piękna ludzi i otaczającej ich przyrody.</p>
+
+    <img src="biografia.jpg" alt="Fotograf w pomarańczowej kurtce z aparatem Nikon D200 nad wodą">
+  </section>
+
+  <section id="media" class="media">
+    <h2>Media</h2>
+    <p>Kliknij dowolne zdjęcie, aby je powiększyć lub pobrać.</p>
+
+    <a href="jagody.jpg" download>
+      <img src="jagody.jpg" alt="Jagody na gałązce">
+    </a>
+
+    <a href="klosa.jpg" download>
+      <img src="klosa.jpg" alt="Las z promieniami światła">
+    </a>
+
+    <a href="bolt.jpg" download>
+      <img src="bolt.jpg" alt="Hulajnoga Bolt w krajobrazie">
+    </a>
+  </section>
+
+  <section id="kontakt">
+    <h2>Kontakt</h2>
+    <p>Masz pytania lub chcesz współpracować? Napisz do mnie:</p>
+    <p><strong>Email:</strong> <a href="mailto:4l4nek@gmail.com">4l4nek@gmail.com</a></p>
+  </section>
+
+  <footer>
+    <p>© 2025 Alan – Wszystkie prawa zastrzeżone</p>
+  </footer>
+
+  <button id="scrollTop" onclick="window.scrollTo({ top: 0, behavior: 'smooth' });">⬆ W górę</button>
+
+  <script>
+    // tryb ciemny
+    function toggleDarkMode() {
+      document.body.classList.toggle("dark-mode");
+    }
+
+    // podświetlenie aktywnej sekcji
+    const sections = document.querySelectorAll("section");
+    const navLinks = document.querySelectorAll("nav a");
+
+    window.addEventListener("scroll", () => {
+      let current = "";
+      sections.forEach(section => {
+        const top = window.scrollY;
+        const offset = section.offsetTop - 100;
+        const height = section.offsetHeight;
+        if (top >= offset && top < offset + height) {
+          current = section.getAttribute("id");
+        }
+      });
+
+      navLinks.forEach(link => {
+        link.classList.remove("active");
+        if (link.getAttribute("href").includes(current)) {
+          link.classList.add("active");
+        }
+      });
+    });
+
+    // opad śniegu
+    const snowflakes = [];
+    for (let i = 0; i < 60; i++) {
+      const flake = document.createElement("div");
+      flake.classList.add("flake");
+      flake.style.left = Math.random() * window.innerWidth + "px";
+      flake.style.animationDuration = (Math.random() * 3 + 2) + "s";
+      flake.style.opacity = Math.random();
+      flake.style.fontSize = Math.random() * 10 + 10 + "px";
+      flake.innerHTML = "❄️";
+      document.body.appendChild(flake);
+      snowflakes.push(flake);
+    }
+
+    // licznik odwiedzin (lokalnie)
+    let visits = localStorage.getItem("alanVisits") || 0;
+    visits++;
+    localStorage.setItem("alanVisits", visits);
+    const footer = document.querySelector("footer");
+    const counter = document.createElement("p");
+    counter.textContent = `Liczba odwiedzin (na tym urządzeniu): ${visits}`;
+    footer.appendChild(counter);
+  </script>
+</body>
+</html>
